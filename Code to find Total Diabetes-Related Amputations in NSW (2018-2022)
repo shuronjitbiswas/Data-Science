@@ -1,0 +1,79 @@
+Code to find Total Diabetes-Related Amputations in NSW (2018-2022)
+
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Aug 14 13:01:04 2024
+
+@author: shuronjit Sumon Biswas
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Creating a DataFrame from the given data
+data = {
+    'Amputation': ['Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle',
+                   'Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle',
+                   'Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle', 'Toe/foot/ankle',
+                   'Below knee', 'Below knee', 'Below knee', 'Below knee',
+                   'Below knee', 'Below knee', 'Below knee', 'Below knee',
+                   'Below knee', 'Below knee', 'Below knee', 'Below knee',
+                   'Above knee', 'Above knee', 'Above knee', 'Above knee',
+                   'Above knee', 'Above knee', 'Above knee', 'Above knee',
+                   'Above knee', 'Above knee', 'Above knee', 'Above knee',
+                   'Total', 'Total', 'Total', 'Total', 'Total', 'Total', 'Total', 'Total',
+                   'Total', 'Total', 'Total', 'Total'],
+    'Sex': ['Males', 'Males', 'Males', 'Males',
+            'Females', 'Females', 'Females', 'Females',
+            'Persons', 'Persons', 'Persons', 'Persons',
+            'Males', 'Males', 'Males', 'Males',
+            'Females', 'Females', 'Females', 'Females',
+            'Persons', 'Persons', 'Persons', 'Persons',
+            'Males', 'Males', 'Males', 'Males',
+            'Females', 'Females', 'Females', 'Females',
+            'Persons', 'Persons', 'Persons', 'Persons',
+            'Males', 'Males', 'Males', 'Males',
+            'Females', 'Females', 'Females', 'Females',
+            'Persons', 'Persons', 'Persons', 'Persons'],
+    'Period': ['21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19',
+               '21/22', '20/21', '19/20', '18/19'],
+    'Number': [1128, 1110, 1085, 1018, 282, 338, 320, 329, 1410, 1448, 1405, 1347,
+               135, 133, 139, 138, 34, 48, 43, 46, 169, 181, 182, 184,
+               43, 40, 38, 42, 18, 12, 17, 17, 61, 52, 55, 59,
+               1306, 1283, 1262, 1198, 334, 398, 380, 392, 1640, 1681, 1642, 1590]
+}
+
+df = pd.DataFrame(data)
+
+# Filter only rows for total amputations for all persons
+totals_df = df[(df['Amputation'] == 'Total') & (df['Sex'] == 'Persons')]
+
+# Mapping 'Period' to Fiscal Years for x-axis labels
+totals_df['Fiscal Year'] = totals_df['Period'].map({
+    '21/22': '2021-22',
+    '20/21': '2020-21',
+    '19/20': '2019-20',
+    '18/19': '2018-19'
+})
+
+# Ensure data is sorted by fiscal year to avoid plotting issues
+totals_df = totals_df.sort_values(by='Fiscal Year')
+
+# Plotting the line graph
+plt.figure(figsize=(10, 6))
+plt.plot(totals_df['Fiscal Year'], totals_df['Number'], marker='o', linestyle='-', color='b')
+plt.title('Total Diabetes-Related Amputations in NSW (2018-2022)')
+plt.xlabel('Fiscal Year')
+plt.ylabel('Number of Amputations')
+plt.grid(True)
+plt.show()
