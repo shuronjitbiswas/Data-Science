@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Aug 13 16:35:18 2024
+
+@author: Shuronjit Sumon Biswas
+"""
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import chi2_contingency
+
+# Example data as a DataFrame
+data = {
+    'Amputation': ['Toe/ankle/foot', 'Below knee', 'Above knee', 'Total',
+                   'Toe/ankle/foot', 'Below knee', 'Above knee', 'Total'],
+    'Sex': ['Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female'],
+    'Count': [100, 50, 30, 180, 90, 45, 25, 160]  # Example counts
+}
+df = pd.DataFrame(data)
+
+# Bar chart for amputation counts by type and sex
+plt.figure(figsize=(10, 6))
+df.groupby(['Amputation', 'Sex'])['Count'].sum().unstack().plot(kind='bar', stacked=True)
+plt.title('Amputation Counts by Type and Sex')
+plt.xlabel('Amputation Type')
+plt.ylabel('Count')
+plt.legend(title='Sex')
+plt.show()
+
+# Amputation type distribution (excluding 'Total' category for specific types)
+type_dist = df[df['Amputation'] != 'Total'].set_index('Amputation')['Count']
+plt.figure(figsize=(8, 8))
+plt.pie(type_dist, labels=type_dist.index, autopct='%1.1f%%')
+plt.title('Distribution of Amputation Types')
+plt.show()
+
+# Chi-square test for independence between Sex and Amputation type
+# Preparing a contingency table where the index is Amputation type and columns represent Sex
+contingency_table = pd.pivot_table(df[df['Amputation'] != 'Total'], values='Count', index='Amputation', columns='Sex', aggfunc='sum', fill_value=0)
+chi2, p_value, dof, expected = chi2_contingency(contingency_table)
+print(f"Chi-square test p-value: {p_value:.3f}")
